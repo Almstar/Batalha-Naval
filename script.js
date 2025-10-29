@@ -1,103 +1,108 @@
 const boardSize = 10;
-const ships = [
-    { name: "porta-aviões", size: 5, color: "porta-avioes" },
-    { name: "cruzador", size: 4, color: "cruzador" },
-    { name: "contratorpedeiro", size: 3, color: "contratorpedeiro" },
-    { name: "rebocador", size: 2, color: "rebocador" }
-];
+const totalShips = {
+  "Porta-aviões": 1,
+  "Acorazados": 2,
+  "Destruidores": 3,
+  "Submarinos": 4
+};
 
-let board = [];
-let shots = [];
+const shipSizes = {
+  "Porta-aviões": 4,
+  "Acorazados": 3,
+  "Destruidores": 2,
+  "Submarinos": 1
+};
+
+const ships = [];
+let chances = 30;
 let hits = 0;
-let misses = 0;
-const waterSound = document.getElementById('water-sound');
 
-// Função para criar o tabuleiro
-function createBoard() {
-    const gameBoard = document.getElementById('game-board');
-    for (let i = 0; i < boardSize * boardSize; i++) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        cell.dataset.index = i;
-        cell.addEventListener('click', handleCellClick);
-        gameBoard.appendChild(cell);
-        board.push({ ship: null, hit: false });
+function initializeBoard() {
+  const board = document.getElementById("game-board");
+  board.innerHTML = "";
+
+  for (let i = 0; i < boardSize * boardSize; i++) {
+    const square = document.createElement("div");
+    square.dataset.index = i;
+    square.addEventListener("click", handleClick);
+    board.appendChild(square);
+  }
+}
+
+function generateShips() {
+  // Randomly generate ships on the board
+  for (const [shipType, count] of Object.entries(totalShips)) {
+    for (let i = 0; i < count; i++) {
+      placeShip(shipType);
     }
+  }
 }
 
-// Função para posicionar os barcos aleatoriamente
-function placeShips() {
-    ships.forEach(ship => {
-        let placed = false;
-        while (!placed) {
-            const orientation = Math.random() > 0.5 ? 'horizontal' : 'vertical';
-            const start = Math.floor(Math.random() * (boardSize * boardSize));
-            if (canPlaceShip(start, ship.size, orientation)) {
-                placeShip(start, ship.size, orientation, ship.color);
-                placed = true;
-            }
-        }
-    });
-}
+function placeShip(type) {
+  const size = shipSizes[type];
+  const direction = Math.random() < 0.5 ? "horizontal" : "vertical";
+  let placed = false;
 
-// Verificar se é possível colocar o barco
-function canPlaceShip(start, size, orientation) {
-    const startRow = Math.floor(start / boardSize);
-    const startCol = start % boardSize;
+  while (!placed) {
+    const randomIndex = Math.floor(Math.random() * boardSize * boardSize);
+    const startRow = Math.floor(randomIndex / boardSize);
+    const startCol = randomIndex % boardSize;
+    let positions = [];
+
+    // Check if ship fits in the grid and doesn't overlap other ships
     for (let i = 0; i < size; i++) {
-        const index = orientation === 'horizontal'
-            ? start + i
-            : start + i * boardSize;
-        if (index < 0 || index >= boardSize * boardSize || board[index].ship) {
-            return false;
-        }
+      const row = direction === "horizontal" ? startRow : startRow + i;
+      const col = direction === "vertical" ? startCol : startCol + i;
+
+      if (row >= boardSize || col >= boardSize) break;
+      positions.push({ row, col });
+
+      if (i === size - 1) {
+        ships.push({ type, positions });
+        placed = true;
+        positions.forEach(({ row, col }) => {
+          const index = row * boardSize + col;
+          document.querySelector(`#game-board div[data-index="${index}"]`).classList.add(type);
+        });
+      }
     }
-    return true;
+  }
 }
 
-// Colocar o barco no tabuleiro com a cor
-function placeShip(start, size, orientation, color) {
-    for (let i = 0; i < size; i++) {
-        const index = orientation === 'horizontal'
-            ? start + i
-            : start + i * boardSize;
-        board[index].ship = color;
-        const cell = document.querySelector(`[data-index="${index}"]`);
-        // Deixe a célula invisível inicialmente, sem cor
-    }
-}
+function handleClick(event) {
+  const square = event.target;
+  const index = square.dataset.index;
+  const row = Math.floor(index / boardSize);
+  const col = index % boardSize;
 
-// Função para lidar com o clique do usuário
-function handleCellClick(event) {
-    const index = event.target.dataset.index;
-    if (board[index].hit || shots.includes(index)) return;
+  if (square.classList.contains("hit") || square.classList.contains("miss")) return;
 
-    shots.push(index);
-    if (board[index].ship) {
-        board[index].hit = true;
-        event.target.classList.add('hit');
-        event.target.classList.add(board[index].ship);  // Revela o tipo de navio
+  let hit = false;
+
+  ships.forEach(ship => {
+    ship.positions.forEach(({ row: shipRow, col: shipCol }) => {
+      if (row === shipRow && col === shipCol) {
+        hit = true;
         hits++;
-    } else {
-        event.target.classList.add('miss');
-        misses++;
+        square.classList.add("hit");
+      }
+    });
+  });
 
-        // Tocar o som de erro
-        waterSound.play();
-    }
+  if (!hit) {
+    square.classList.add("miss");
+    document.getElementById("water-sound").play();
+  }
 
-    checkGameStatus();
+  chances--;
+  document.getElementById("chances").textContent = chances;
+
+  if (hits === 10) {
+    alert("Você ganhou!");
+  } else if (chances === 0) {
+    alert("VOCÊ PERDEU");
+  }
 }
 
-// Verificar se o jogo acabou
-function checkGameStatus() {
-    if (hits === ships.reduce((total, ship) => total + ship.size, 0)) {
-        document.getElementById('result').textContent = 'Você venceu!';
-    } else if (misses === 50) {
-        document.getElementById('result').textContent = 'Você perdeu!';
-    }
-}
-
-// Inicializar o jogo
-createBoard();
-placeShips();
+initializeBoard();
+generateShips();
