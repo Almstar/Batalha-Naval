@@ -30,7 +30,6 @@ function initializeBoard() {
 }
 
 function generateShips() {
-  // Randomly generate ships on the board
   for (const [shipType, count] of Object.entries(totalShips)) {
     for (let i = 0; i < count; i++) {
       placeShip(shipType);
@@ -49,7 +48,6 @@ function placeShip(type) {
     const startCol = randomIndex % boardSize;
     let positions = [];
 
-    // Check if ship fits in the grid and doesn't overlap other ships
     for (let i = 0; i < size; i++) {
       const row = direction === "horizontal" ? startRow : startRow + i;
       const col = direction === "vertical" ? startCol : startCol + i;
