@@ -1,28 +1,21 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+/* Cores para cada tipo de navio */
+.cell.porta-avioes {
+    background-color: #ff0000;  /* Vermelho */
 }
 
-h1 {
-    margin-top: 20px;
+.cell.cruzador {
+    background-color: #ff8c00;  /* Laranja */
 }
 
-.board {
-    display: grid;
-    grid-template-columns: repeat(10, 40px);
-    grid-template-rows: repeat(10, 40px);
-    gap: 2px;
-    justify-content: center;
-    margin-top: 20px;
+.cell.contratorpedeiro {
+    background-color: #008000;  /* Verde */
 }
 
-.cell {
-    width: 40px;
-    height: 40px;
-    background-color: #add8e6;
-    border: 1px solid #ddd;
+.cell.rebocador {
+    background-color: #0000ff;  /* Azul */
 }
 
+/* Cores de acerto e erro */
 .cell.hit {
     background-color: red;
 }
