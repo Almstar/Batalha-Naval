@@ -60,7 +60,11 @@ function placeShip(type) {
         placed = true;
         positions.forEach(({ row, col }) => {
           const index = row * boardSize + col;
-          document.querySelector(`#game-board div[data-index="${index}"]`).classList.add(type);
+          const square = document.querySelector(`#game-board div[data-index="${index}"]`);
+          if (type === "Porta-aviões") square.classList.add("orange");
+          if (type === "Acorazados") square.classList.add("green");
+          if (type === "Destruidores") square.classList.add("yellow");
+          if (type === "Submarinos") square.classList.add("purple");
         });
       }
     }
