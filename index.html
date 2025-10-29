@@ -1,38 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Batalha Naval</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batalha Naval</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Batalha Naval</h1>
-
-    <div class="game-container">
-        <div class="legend">
-            <h2>Legenda</h2>
-            <div class="legend-item">
-                <div class="color-box porta-avioes"></div> Porta-aviões (5)
-            </div>
-            <div class="legend-item">
-                <div class="color-box cruzador"></div> Cruzador (4)
-            </div>
-            <div class="legend-item">
-                <div class="color-box contratorpedeiro"></div> Contratorpedeiro (3)
-            </div>
-            <div class="legend-item">
-                <div class="color-box rebocador"></div> Rebocador (2)
-            </div>
-        </div>
-
-        <div id="game-board" class="board"></div>
+  <div id="game-container">
+    <div id="game-board"></div>
+    <div id="legend">
+      <h3>Legenda:</h3>
+      <ul>
+        <li><span class="orange">Porta-aviões (4)</span></li>
+        <li><span class="green">Acorazados (2)</span></li>
+        <li><span class="yellow">Destruidores (3)</span></li>
+        <li><span class="blue">Submarinos (4)</span></li>
+      </ul>
+      <h3>Chances: <span id="chances">30</span></h3>
     </div>
-
-    <div id="result"></div>
-
-    <!-- Som de erro -->
-    <audio id="water-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
-    <script src="script.js"></script>
+  </div>
+  <audio id="water-sound" src="water-sound.mp3"></audio>
+  <script src="script.js"></script>
 </body>
 </html>
