@@ -8,8 +8,29 @@
 </head>
 <body>
     <h1>Batalha Naval</h1>
-    <div id="game-board" class="board"></div>
+
+    <div class="game-container">
+        <div class="legend">
+            <h2>Legenda</h2>
+            <div class="legend-item">
+                <div class="color-box porta-avioes"></div> Porta-aviões (5)
+            </div>
+            <div class="legend-item">
+                <div class="color-box cruzador"></div> Cruzador (4)
+            </div>
+            <div class="legend-item">
+                <div class="color-box contratorpedeiro"></div> Contratorpedeiro (3)
+            </div>
+            <div class="legend-item">
+                <div class="color-box rebocador"></div> Rebocador (2)
+            </div>
+        </div>
+
+        <div id="game-board" class="board"></div>
+    </div>
+
     <div id="result"></div>
+
     <!-- Som de erro -->
     <audio id="water-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
     <script src="script.js"></script>
