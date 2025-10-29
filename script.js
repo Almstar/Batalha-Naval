@@ -63,7 +63,7 @@ function placeShip(start, size, orientation, color) {
             : start + i * boardSize;
         board[index].ship = color;
         const cell = document.querySelector(`[data-index="${index}"]`);
-        cell.classList.add(color);  // Adiciona a classe com a cor do navio
+        // Deixe a célula invisível inicialmente, sem cor
     }
 }
 
@@ -76,6 +76,7 @@ function handleCellClick(event) {
     if (board[index].ship) {
         board[index].hit = true;
         event.target.classList.add('hit');
+        event.target.classList.add(board[index].ship);  // Revela o tipo de navio
         hits++;
     } else {
         event.target.classList.add('miss');
