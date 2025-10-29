@@ -48,7 +48,7 @@ li {
 .orange { background-color: orange; }
 .green { background-color: green; }
 .yellow { background-color: yellow; }
-.blue { background-color: blue; }
+.purple { background-color: purple; }
 
 #game-board .hit {
   cursor: default;
@@ -57,3 +57,4 @@ li {
 #game-board .miss {
   background-color: blue;
 }
+
