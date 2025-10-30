@@ -93,7 +93,6 @@ function handleClick(event) {
 
   if (!hit) {
     square.classList.add("miss");
-    document.getElementById("water-sound").play();
   }
 
   chances--;
