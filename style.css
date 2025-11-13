@@ -1,0 +1,103 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.game-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  gap: 2px;
+  background-color: #ccc;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  background-color: #d9d9d9;
+  border: 1px solid #999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cell.hit {
+  background-color: #90ee90;
+}
+
+.cell.miss {
+  background-color: #add8e6;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 280px;
+}
+
+#moves {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#message {
+  font-size: 18px;
+  color: #d00;
+  font-weight: bold;
+}
+
+.legend-item {
+  margin-bottom: 10px;
+}
+
+.ship {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.ship .cell {
+  background-color: #e0e0e0;
+  width: 30px;
+  height: 30px;
+}
+
+.t-shape {
+  display: grid;
+  grid-template-columns: repeat(3, 30px);
+  grid-template-rows: repeat(2, 30px);
+  justify-items: center;
+  align-items: center;
+}
+
+.t-shape .cell:nth-child(4) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.t-shape .cell:nth-child(5) {
+  grid-column: 2;
+  grid-row: 3;
+}
