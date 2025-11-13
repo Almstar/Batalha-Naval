@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batalha Naval - Aviões</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>BATALHA NAVAL - AVIÕES</h1>
+
+  <div class="game-container">
+    <div id="board"></div>
+
+    <div class="sidebar">
+      <div id="moves">Jogadas restantes: 30</div>
+      <div id="message"></div>
+      <h2>Legenda:</h2>
+
+      <div class="legend">
+        <div class="legend-item">
+          <span>Porta-aviões (5 quadrados)</span>
+          <div class="ship t-shape">
+            <div class="cell">5</div>
+            <div class="cell">5</div>
+            <div class="cell">5</div>
+            <div class="cell center">5</div>
+            <div class="cell bottom">5</div>
+          </div>
+        </div>
+
+        <div class="legend-item">
+          <span>Navio de 4 canos (4 quadrados)</span>
+          <div class="ship">
+            <div class="cell">4</div>
+            <div class="cell">4</div>
+            <div class="cell">4</div>
+            <div class="cell">4</div>
+          </div>
+        </div>
+
+        <div class="legend-item">
+          <span>2 navios de 3 canos (3 quadrados)</span>
+          <div class="ship">
+            <div class="cell">3</div>
+            <div class="cell">3</div>
+            <div class="cell">3</div>
+          </div>
+        </div>
+
+        <div class="legend-item">
+          <span>3 navios de 2 canos (2 quadrados)</span>
+          <div class="ship">
+            <div class="cell">2</div>
+            <div class="cell">2</div>
+          </div>
+        </div>
+
+        <div class="legend-item">
+          <span>4 navios de 1 cano (1 quadrado)</span>
+          <div class="ship">
+            <div class="cell">1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
