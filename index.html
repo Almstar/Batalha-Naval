@@ -1,283 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Batalha Naval dos Aviões</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Batalha Naval - Aviões (T fixo)</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background-color: #f4f4f4;
-    height: 100vh;
-    margin: 0;
-    padding: 20px;
-    gap: 40px;
-  }
-
-  h1 {
-    text-align: center;
-    color: #333;
-  }
-
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #game-board {
-    display: grid;
-    grid-template-columns: repeat(10, 40px);
-    grid-template-rows: repeat(10, 40px);
-    gap: 2px;
-    background-color: #999;
-    padding: 10px;
-    border-radius: 10px;
-  }
-
-  .cell {
-    width: 40px;
-    height: 40px;
-    background-color: #d3d3d3;
-    border: 1px solid #aaa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 18px;
-    border-radius: 4px;
-  }
-
-  .cell.hit {
-    background-color: #add8e6; /* azul claro para erro */
-  }
-
-  .cell.found {
-    background-color: #ffffff;
-  }
-
-  #status {
-    margin-top: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-  }
-
-  #legend {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-  }
-
-  .legend-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 14px;
-    color: #333;
-  }
-
-  .ship {
-    display: grid;
-    gap: 2px;
-    margin-top: 5px;
-  }
-
-  .square {
-    width: 25px;
-    height: 25px;
-    background-color: #d3d3d3;
-    border: 1px solid #999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 14px;
-  }
-
-  /* Porta-aviões em T */
-  .ship-t {
-    display: grid;
-    grid-template-columns: repeat(3, 25px);
-    grid-template-rows: repeat(2, 25px);
-  }
-
-  .ship-t .square:nth-child(1),
-  .ship-t .square:nth-child(2),
-  .ship-t .square:nth-child(3),
-  .ship-t .square:nth-child(5) {
-    grid-row: 1;
-  }
-
-  .ship-t .square:nth-child(4) {
-    grid-column: 2;
-    grid-row: 2;
-  }
-
+  :root{--cell-size:42px;--mini:26px}
+  body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:18px;background:#f7f8fb;color:#111}
+  h1{font-size:20px;margin:0 0 12px}
+  .layout{display:flex;gap:20px;align-items:flex-start}
+  /* board */
+  .board-wrap{display:grid;grid-template-columns:40px repeat(10,var(--cell-size));grid-template-rows:20px repeat(10,var(--cell-size));align-items:center}
+  .label-col{width:40px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:600}
+  .label-row{width:var(--cell-size);height:20px;display:flex;align-items:center;justify-content:center;font-weight:600}
+  .cell{width:var(--cell-size);height:var(--cell-size);background:#e6e9eb;border:1px solid #c9ced2;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;font-weight:700;border-radius:4px}
+  .cell.revealed{cursor:default}
+  .cell.miss{background:#cfe7ff;color:#045}
+  .cell.hit{background:#ffffff;color:#000;font-size:18px}
+  /* right column */
+  .rightcol{min-width:300px}
+  .hud{background:#fff;padding:12px;border:1px solid #e1e5ea;border-radius:8px}
+  .counter{font-size:18px;margin-bottom:8px}
+  button#reset{margin-top:10px;padding:8px 12px;border-radius:6px;border:0;background:#2b6cff;color:#fff;cursor:pointer}
+  .note{font-size:13px;color:#444;margin-top:8px}
+  .message{padding:10px;border-radius:6px;margin-top:12px;display:none}
+  .message.win{background:#d4edda;border:1px solid #c3e6cb}
+  .message.lose{background:#f8d7da;border:1px solid #f5c6cb}
+  /* legend */
+  .legend{margin-top:14px;background:#fff;padding:12px;border:1px solid #e1e5ea;border-radius:8px}
+  .legend h3{margin:0 0 8px;font-size:15px}
+  .legend-item{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+  .mini-grid{display:grid;gap:6px}
+  .mini-row{display:flex;gap:6px}
+  .mini-cell{width:var(--mini);height:var(--mini);background:#e6e9eb;border:1px solid #c9ced2;display:flex;align-items:center;justify-content:center;font-weight:700;border-radius:4px}
+  /* porta-aviões T in legend exactly like in board */
+  .legend-t{display:grid;grid-template-columns:repeat(3,var(--mini));grid-auto-rows:var(--mini);gap:6px}
+  .legend-t .empty{visibility:hidden}
+  .legend-t .s{background:#fff}
+  @media (max-width:780px){.layout{flex-direction:column}.rightcol{min-width:100%}}
 </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Batalha Naval dos Aviões</h1>
-    <div id="game-board"></div>
-    <div id="status">Jogadas restantes: <span id="moves">30</span></div>
-  </div>
-
-  <div id="legend">
-    <h3>Legenda:</h3>
-    <div class="legend-item">
-      <strong>Porta-aviões (5 quadrados):</strong>
-      <div class="ship ship-t">
-        <div class="square">5</div>
-        <div class="square">5</div>
-        <div class="square">5</div>
-        <div class="square">5</div>
-        <div class="square">5</div>
+  <h1>Batalha Naval - Aviões</h1>
+  <div class="layout">
+    <div>
+      <div class="board-wrap" id="boardWrap">
+        <div class="label-col"></div>
+        <!-- top numbers injected by JS -->
       </div>
     </div>
 
-    <div class="legend-item">
-      <strong>Navio de 4 canos:</strong>
-      <div class="ship" style="grid-template-columns: repeat(4, 25px);">
-        <div class="square">4</div>
-        <div class="square">4</div>
-        <div class="square">4</div>
-        <div class="square">4</div>
+    <div class="rightcol">
+      <div class="hud">
+        <div class="counter">Jogadas restantes: <span id="shots">30</span></div>
+        <div>Acertos: <span id="hits">0</span> / <span id="totalShipCells">0</span></div>
+        <div class="note">Clique nos quadrados cinza para atirar. Água aparece azul-claro. Acertos mostram o número do avião (tamanho).</div>
+        <button id="reset">Reiniciar jogo</button>
+        <div id="message" class="message"></div>
       </div>
-    </div>
 
-    <div class="legend-item">
-      <strong>2 Navios de 3 canos:</strong>
-      <div class="ship" style="grid-template-columns: repeat(3, 25px);">
-        <div class="square">3</div>
-        <div class="square">3</div>
-        <div class="square">3</div>
-      </div>
-    </div>
+      <div class="legend" aria-label="Legenda dos aviões">
+        <h3>Legenda:</h3>
 
-    <div class="legend-item">
-      <strong>3 Navios de 2 canos:</strong>
-      <div class="ship" style="grid-template-columns: repeat(2, 25px);">
-        <div class="square">2</div>
-        <div class="square">2</div>
-      </div>
-    </div>
-
-    <div class="legend-item">
-      <strong>4 Navios de 1 cano:</strong>
-      <div class="ship" style="grid-template-columns: repeat(1, 25px);">
-        <div class="square">1</div>
-      </div>
-    </div>
-  </div>
-
-<script>
-const board = document.getElementById('game-board');
-const movesDisplay = document.getElementById('moves');
-const statusDisplay = document.getElementById('status');
-let movesLeft = 30;
-const size = 10;
-let ships = [];
-let revealed = Array(size).fill().map(()=>Array(size).fill(false));
-
-// Criar o tabuleiro
-for (let i = 0; i < size * size; i++) {
-  const cell = document.createElement('div');
-  cell.classList.add('cell');
-  cell.dataset.row = Math.floor(i / size);
-  cell.dataset.col = i % size;
-  cell.addEventListener('click', handleClick);
-  board.appendChild(cell);
-}
-
-// Tipos de navios
-const fleet = [
-  { id: 5, shape: [[0,0],[0,1],[0,2],[1,1]], count: 1 }, // Porta-aviões em T
-  { id: 4, shape: [[0,0],[0,1],[0,2],[0,3]], count: 1 },
-  { id: 3, shape: [[0,0],[0,1],[0,2]], count: 2 },
-  { id: 2, shape: [[0,0],[0,1]], count: 3 },
-  { id: 1, shape: [[0,0]], count: 4 },
-];
-
-function canPlace(shape, row, col, grid) {
-  for (const [dr, dc] of shape) {
-    let r = row + dr, c = col + dc;
-    if (r < 0 || r >= size || c < 0 || c >= size) return false;
-    if (grid[r][c] !== 0) return false;
-    // Verifica se há navio ao redor
-    for (let rr = -1; rr <= 1; rr++) {
-      for (let cc = -1; cc <= 1; cc++) {
-        let nr = r + rr, nc = c + cc;
-        if (nr >= 0 && nr < size && nc >= 0 && nc < size) {
-          if (grid[nr][nc] !== 0) return false;
-        }
-      }
-    }
-  }
-  return true;
-}
-
-function placeShips() {
-  let grid = Array(size).fill().map(()=>Array(size).fill(0));
-  for (const type of fleet) {
-    for (let i = 0; i < type.count; i++) {
-      let placed = false;
-      for (let tries = 0; tries < 2000 && !placed; tries++) {
-        const row = Math.floor(Math.random() * size);
-        const col = Math.floor(Math.random() * size);
-        if (canPlace(type.shape, row, col, grid)) {
-          for (const [dr, dc] of type.shape) {
-            grid[row + dr][col + dc] = type.id;
-          }
-          placed = true;
-        }
-      }
-    }
-  }
-  return grid;
-}
-
-const grid = placeShips();
-
-function handleClick(e) {
-  const row = +e.target.dataset.row;
-  const col = +e.target.dataset.col;
-  if (revealed[row][col] || movesLeft <= 0) return;
-
-  revealed[row][col] = true;
-  movesLeft--;
-  movesDisplay.textContent = movesLeft;
-
-  const val = grid[row][col];
-  if (val === 0) {
-    e.target.classList.add('hit'); // água
-  } else {
-    e.target.textContent = val; // acerto
-    e.target.classList.add('found');
-  }
-
-  checkEndGame();
-}
-
-function checkEndGame() {
-  const allFound = grid.flat().every((cell, i) => cell === 0 || revealed[Math.floor(i/size)][i%size]);
-  if (allFound) {
-    statusDisplay.textContent = "VOCÊ VENCEU!!! 🏆";
-    disableBoard();
-  } else if (movesLeft === 0) {
-    statusDisplay.textContent = "VOCÊ PERDEU!!! 💥";
-    disableBoard();
-  }
-}
-
-function disableBoard() {
-  document.querySelectorAll('.cell').forEach(c => c.removeEventListener('click', handleClick));
-}
-</script>
-</body>
-</html>
+        <div class="legend-item">
+          <div class="legend-t" aria-hidden>
+            <!-- Row 0 of T: three squares -->
+            <div class="mini-cell s">5</div>
+            <div class="mini-cell s">5</div>
+            <div class="mini-cell s">5</div>
+            <!-- Row
