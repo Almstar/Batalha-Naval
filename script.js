@@ -62,7 +62,7 @@ function placeShip(ship) {
       shapeCells = Array.from({ length: ship.size }, (_, j) => [row + j, col]);
     }
 
-    // Verificar se cabe no campo
+    // Verificar se cabe no campo e se não encosta
     if (
       shapeCells.every(
         ([r, c]) =>
@@ -118,7 +118,21 @@ function handleClick(index) {
 
   if (movesLeft === 0 && hits < totalShipCells) {
     messageDisplay.textContent = "VOCÊ PERDEU!!! 😢";
+    revealShips();
     board.style.pointerEvents = "none";
+  }
+}
+
+function revealShips() {
+  for (let r = 0; r < boardSize; r++) {
+    for (let c = 0; c < boardSize; c++) {
+      const index = r * boardSize + c;
+      const cell = board.children[index];
+      if (grid[r][c] !== 0 && !cell.classList.contains("hit")) {
+        cell.classList.add("hit");
+        cell.textContent = grid[r][c];
+      }
+    }
   }
 }
 
